@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -111,7 +109,6 @@ public abstract class BaseBackServlet extends HttpServlet {
                     else {
                         String paramName = item.getFieldName();
                         String paramValue = new String(item.getString().getBytes("ISO-8859-1"), "UTF-8");
-                        logger.info("解析到文件: {}", paramValue);
                         params.put(paramName, paramValue);
                     }
                 }

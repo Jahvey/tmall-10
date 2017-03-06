@@ -104,7 +104,8 @@ public class Order {
         this.deliveryDate = deliveryDate;
     }
     public Date getConfirmDate() {
-        return confirmDate;
+        if (confirmDate == null) return null;
+        return (Date) confirmDate.clone();
     }
     public void setConfirmDate(Date confirmDate) {
         this.confirmDate = confirmDate;

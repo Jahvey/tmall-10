@@ -37,7 +37,7 @@ public class CategoryDAOTest {
 
     @Test
     public void update() throws Exception {
-        Category category = new Category(1, "电脑");
+        Category category = new Category(9, "毒奶粉2");
         categoryDAO.update(category);
     }
 

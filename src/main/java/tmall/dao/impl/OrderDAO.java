@@ -118,34 +118,35 @@ public class OrderDAO implements IOrderDAO {
         Order bean = new Order();
         try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
             String sql = "SELECT * FROM order_ WHERE id = " + id;
-            ResultSet rs = s.executeQuery(sql);
-            if (rs.next()) {
-                String orderCode =rs.getString("orderCode");
-                String address = rs.getString("address");
-                String post = rs.getString("post");
-                String receiver = rs.getString("receiver");
-                String mobile = rs.getString("mobile");
-                String userMessage = rs.getString("userMessage");
-                String status = rs.getString("status");
-                int uid =rs.getInt("uid");
-                Date createDate = DateUtil.timeStampToDate( rs.getTimestamp("createDate"));
-                Date payDate = DateUtil.timeStampToDate( rs.getTimestamp("payDate"));
-                Date deliveryDate = DateUtil.timeStampToDate( rs.getTimestamp("deliveryDate"));
-                Date confirmDate = DateUtil.timeStampToDate( rs.getTimestamp("confirmDate"));
-                bean.setOrderCode(orderCode);
-                bean.setAddress(address);
-                bean.setPost(post);
-                bean.setReceiver(receiver);
-                bean.setMobile(mobile);
-                bean.setUserMessage(userMessage);
-                bean.setCreateDate(createDate);
-                bean.setPayDate(payDate);
-                bean.setDeliveryDate(deliveryDate);
-                bean.setConfirmDate(confirmDate);
-                User user = new UserDAO().get(uid);
-                bean.setUser(user);
-                bean.setStatus(status);
-                bean.setId(id);
+            try (ResultSet rs = s.executeQuery(sql)) {
+                if (rs.next()) {
+                    String orderCode =rs.getString("orderCode");
+                    String address = rs.getString("address");
+                    String post = rs.getString("post");
+                    String receiver = rs.getString("receiver");
+                    String mobile = rs.getString("mobile");
+                    String userMessage = rs.getString("userMessage");
+                    String status = rs.getString("status");
+                    int uid =rs.getInt("uid");
+                    Date createDate = DateUtil.timeStampToDate( rs.getTimestamp("createDate"));
+                    Date payDate = DateUtil.timeStampToDate( rs.getTimestamp("payDate"));
+                    Date deliveryDate = DateUtil.timeStampToDate( rs.getTimestamp("deliveryDate"));
+                    Date confirmDate = DateUtil.timeStampToDate( rs.getTimestamp("confirmDate"));
+                    bean.setOrderCode(orderCode);
+                    bean.setAddress(address);
+                    bean.setPost(post);
+                    bean.setReceiver(receiver);
+                    bean.setMobile(mobile);
+                    bean.setUserMessage(userMessage);
+                    bean.setCreateDate(createDate);
+                    bean.setPayDate(payDate);
+                    bean.setDeliveryDate(deliveryDate);
+                    bean.setConfirmDate(confirmDate);
+                    User user = new UserDAO().get(uid);
+                    bean.setUser(user);
+                    bean.setStatus(status);
+                    bean.setId(id);
+                }
             }
             logger.info("查询订单 {} 成功", id);
         } catch (SQLException e) {
