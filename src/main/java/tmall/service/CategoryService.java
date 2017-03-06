@@ -22,6 +22,10 @@ public class CategoryService {
         return categoryDAO.getTotal();
     }
 
+    public void add(Category category) {
+        this.categoryDAO.add(category);
+    }
+
     public List<Category> list(int start, int count) {
         return categoryDAO.list(start, count);
     }

@@ -1,5 +1,9 @@
 package tmall.web.servlet;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tmall.dao.impl.*;
@@ -13,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,9 +90,38 @@ public abstract class BaseBackServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 从request中取出上传文件并返回文件流
+     * 数据从表单提交后会分成两份, 根据isFromField判断是文件还是表单数据
+     * @param req
+     * @param params
+     * @return
+     */
     public InputStream parseUpload(HttpServletRequest req, Map<String, String> params) {
-        //TODO 待完成
-        return null;
+        DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+        fileItemFactory.setSizeThreshold(1024 * 10240);
+        ServletFileUpload fileUpload = new ServletFileUpload(fileItemFactory);
+        List<FileItem> fileItems = null;
+        InputStream in = null;
+        try {
+            fileItems = fileUpload.parseRequest(req);
+            if (fileItems != null) {
+                for (FileItem item : fileItems) {
+                    if (!item.isFormField()) in = item.getInputStream();
+                    else {
+                        String paramName = item.getFieldName();
+                        String paramValue = new String(item.getString().getBytes("ISO-8859-1"), "UTF-8");
+                        logger.info("解析到文件: {}", paramValue);
+                        params.put(paramName, paramValue);
+                    }
+                }
+            }
+        } catch (FileUploadException e) {
+            logger.error("从请求中解析文件异常", e);
+        } catch (IOException e) {
+            logger.error("文件读取异常", e);
+        }
+        return in;
     }
 
 }

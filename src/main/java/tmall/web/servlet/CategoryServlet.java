@@ -2,12 +2,21 @@ package tmall.web.servlet;
 
 import tmall.bean.Category;
 import tmall.service.CategoryService;
+import tmall.util.ImageUtil;
 import tmall.util.Page;
 
+import javax.imageio.ImageIO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作者: wangxh
@@ -21,7 +30,31 @@ public class CategoryServlet extends BaseBackServlet {
 
     @Override
     public String add(HttpServletRequest request, HttpServletResponse response, Page page) {
-        return null;
+        Map<String, String> params = new HashMap<>();
+        InputStream in = super.parseUpload(request, params);
+        String name = params.get("name");
+        Category category = new Category(name);
+        categoryService.add(category);
+
+        // 获取根目录下的文件夹
+        File imageFolder = new File(request.getServletContext().getRealPath("/imgs/category"));
+        File imageFile = new File(imageFolder, category.getId() + ".jpg");
+        try {
+            if ((in != null && in.available() != 0)) {
+                try (FileOutputStream out = new FileOutputStream(imageFile)){
+                    byte[] buff = new byte[1024];
+                    while (in.read(buff) != -1) {
+                        out.write(buff);
+                    }
+                    out.flush();
+                    BufferedImage img = ImageUtil.change2jpg(imageFile);
+                    ImageIO.write(img, "jpg", imageFile);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "@admin_category_list";
     }
 
     @Override
