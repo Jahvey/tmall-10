@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
+
     private ICategoryDAO categoryDAO = DAOFactory.categoryDAO();
 
     public int getTotal() {

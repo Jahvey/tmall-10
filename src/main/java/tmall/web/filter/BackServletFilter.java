@@ -20,8 +20,7 @@ public class BackServletFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(BackServletFilter.class);
 
-    public void destroy() {
-    }
+    public void destroy() {}
 
     public void doFilter(javax.servlet.ServletRequest req, javax.servlet.ServletResponse resp, javax.servlet.FilterChain chain) throws javax.servlet.ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) req;

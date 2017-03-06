@@ -50,10 +50,12 @@ public abstract class BaseBackServlet extends HttpServlet {
      */
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String startStr = req.getParameter("page.start");
+        String countStr = req.getParameter("page.count");
         int start = Integer.parseInt(
-                req.getParameter("page.start") != null ? req.getParameter("page.start") : "0");
+                startStr == null || "".equals(startStr) ? "0" : req.getParameter("page.start"));
         int count = Integer.parseInt(
-                req.getParameter("page.count") != null ? req.getParameter("page.count") : "5");
+                countStr == null || "".equals(countStr) ? "5" : req.getParameter("page.count"));
         Page page = new Page(start, count);
         String methodStr = (String) req.getAttribute("method");
         // 设置默认的方法

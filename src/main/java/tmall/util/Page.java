@@ -12,7 +12,6 @@ public class Page {
     private String param;
 
     public Page(int start, int count) {
-        super();
         this.start = start;
         this.count = count;
     }
@@ -33,15 +32,15 @@ public class Page {
         this.count = count;
     }
 
-    public boolean isHasPreviouse(){
-        if(start==0)
+    public boolean getHasPrevious(){
+        if(start == 0)
             return false;
         return true;
 
     }
 
-    public boolean isHasNext(){
-        if(start==getLast())
+    public boolean getHasNext(){
+        if(start == this.getLast())
             return false;
         return true;
     }
@@ -61,7 +60,7 @@ public class Page {
      * 获取最后一页的页码
      * @return
      */
-    private int getLast(){
+    public int getLast(){
         int last;
         // 假设总数是50，是能够被5整除的，那么最后一页的开始就是45
         if (0 == total % count)
@@ -72,6 +71,7 @@ public class Page {
         last = last < 0 ? 0 : last;
         return last;
     }
+
 
     public int getTotal() {
         return total;
@@ -89,4 +89,13 @@ public class Page {
         this.param = param;
     }
 
+    @Override
+    public String toString() {
+        return "Page{" +
+                "start=" + start +
+                ", count=" + count +
+                ", total=" + total +
+                ", param='" + param + '\'' +
+                '}';
+    }
 }
