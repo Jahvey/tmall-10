@@ -95,7 +95,7 @@ public class CategoryDAO implements ICategoryDAO {
                     logger.info("查询到id为 {} 的条目: {}", id, name);
                     category.setId(id);
                     category.setName(name);
-                } else logger.error("没有查询到id为 {} 的条目");
+                } else logger.error("没有查询到id为 {} 的条目", id);
             }
         } catch (SQLException e) {
             logger.error("查询id为 {} 的条目出错", e);

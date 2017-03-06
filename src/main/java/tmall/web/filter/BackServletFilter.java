@@ -15,7 +15,6 @@ import java.io.IOException;
  * 创建日期: 17-3-4
  * 简介: 后台过滤器
  */
-@WebFilter(filterName = "BackServletFilter", urlPatterns = "/*")
 public class BackServletFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(BackServletFilter.class);
@@ -37,6 +36,7 @@ public class BackServletFilter implements Filter {
             String method = StringUtils.substringAfterLast(uri, "_");
             request.setAttribute("method", method);
             logger.info("拦截到后台请求 url: {} method: {}", uri, method);
+            logger.info("重定向到: {}:{}", servletPath, method);
             req.getRequestDispatcher(servletPath).forward(req, resp);
             return;
         }

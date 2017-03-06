@@ -6,13 +6,18 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tmall.dao.impl.*;
+import tmall.service.CategoryService;
+import tmall.util.ImageUtil;
 import tmall.util.Page;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -35,15 +40,7 @@ public abstract class BaseBackServlet extends HttpServlet {
     public abstract String update(HttpServletRequest request, HttpServletResponse response, Page page) ;
     public abstract String list(HttpServletRequest request, HttpServletResponse response, Page page) ;
 
-    protected CategoryDAO categoryDAO = new CategoryDAO();
-    protected OrderDAO orderDAO = new OrderDAO();
-    protected OrderItemDAO orderItemDAO = new OrderItemDAO();
-    protected ProductDAO productDAO = new ProductDAO();
-    protected ProductImageDAO productImageDAO = new ProductImageDAO();
-    protected PropertyDAO propertyDAO = new PropertyDAO();
-    protected PropertyValueDAO propertyValueDAO = new PropertyValueDAO();
-    protected ReviewDAO reviewDAO = new ReviewDAO();
-    protected UserDAO userDAO = new UserDAO();
+    protected CategoryService categoryService = new CategoryService();
 
     /**
      * 利用反射根据传过来的method参数判断需要执行哪个方法
@@ -74,11 +71,13 @@ public abstract class BaseBackServlet extends HttpServlet {
                  * %: 页面输出
                  * others: 服务器跳转
                  */
-            logger.info("重定向: " + redirect);
+            logger.info("跳转: " + redirect);
             if(redirect.startsWith("@"))
                 resp.sendRedirect(redirect.substring(1));
-            else if(redirect.startsWith("%"))
+            else if(redirect.startsWith("%")) {
+                resp.setContentType("text/html;charset=utf-8");
                 resp.getWriter().print(redirect.substring(1));
+            }
             else
                 req.getRequestDispatcher(redirect).forward(req, resp);
         } catch (NoSuchMethodException e) {
@@ -119,6 +118,29 @@ public abstract class BaseBackServlet extends HttpServlet {
             logger.error("文件读取异常", e);
         }
         return in;
+    }
+        /**
+     * 文件保存
+     * @param file
+     * @param in
+     */
+    protected void saveFile(File file, InputStream in) {
+        logger.info("保存图片文件: {}", file.getName());
+        try {
+            if ((in != null && in.available() != 0)) {
+                try (FileOutputStream out = new FileOutputStream(file)){
+                    byte[] buff = new byte[1024];
+                    while (in.read(buff) != -1) {
+                        out.write(buff);
+                    }
+                    out.flush();
+                    BufferedImage img = ImageUtil.change2jpg(file);
+                    ImageIO.write(img, "jpg", file);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("文件 {} 保存失败", file.getName(), e);
+        }
     }
 
 }

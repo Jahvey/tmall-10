@@ -130,17 +130,18 @@ public class PropertyDAO implements IPropertyDAO {
             ps.setInt(2, start);
             ps.setInt(3, count);
             ResultSet rs = ps.executeQuery();
+            Category category = new CategoryDAO().get(cid);
             while (rs.next()) {
                 Property bean = new Property();
                 int id = rs.getInt(1);
                 String name = rs.getString("name");
                 bean.setName(name);
-                Category category = new CategoryDAO().get(id);
+                logger.info("设置对应关系 {} - {}", name, category.getName());
                 bean.setCategory(category);
                 bean.setId(id);
                 beans.add(bean);
             }
-            logger.error("查询分类id为 {} 下的属性列表成功", cid);
+            logger.info("查询分类id为 {} 下的属性列表成功", cid);
         } catch (SQLException e) {
             logger.error("查询分类 {} 下的属性列表失败", cid, e);
         }
