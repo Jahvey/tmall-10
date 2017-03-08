@@ -25,14 +25,13 @@ public class PropertyServlet extends BaseBackServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyServlet.class);
     private final PropertyService propertyService = new PropertyService();
-    private final CategoryDAO categoryDAO = new CategoryDAO();
 
     @Override
     public String add(HttpServletRequest request, HttpServletResponse response, Page page) {
         String name = request.getParameter("name");
         logger.info("cid: " + request.getParameter("cid"));
         int cid = Integer.parseInt(request.getParameter("cid"));
-        Category category = categoryDAO.get(cid);
+        Category category = categoryService.get(cid);
         Property property = new Property(name, category);
         propertyService.add(property);
         return "@admin_property_list?cid=" + cid;
@@ -71,7 +70,7 @@ public class PropertyServlet extends BaseBackServlet {
     @Override
     public String list(HttpServletRequest request, HttpServletResponse response, Page page) {
         int cid = Integer.parseInt(request.getParameter("cid"));
-        Category category = categoryDAO.get(cid);
+        Category category = categoryService.get(cid);
         List<Property> properties = propertyService.list(cid, page.getStart(), page.getCount());
         int total = propertyService.getTotal(cid);
         page.setTotal(total);

@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class ProductDAO implements IProductDAO {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertyDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductDAO.class);
 
     public int getTotal(int cid) {
         int total = 0;
@@ -114,9 +114,9 @@ public class ProductDAO implements IProductDAO {
                 bean.setId(id);
                 setFirstProductImage(bean);
             }
-            logger.error("获取产品成功, ID: {}", id);
+            logger.info("查询产品成功, ID: {}", id);
         } catch (SQLException e) {
-            logger.error("获取产品失败, ID: {}", id, e);
+            logger.error("查询产品失败, ID: {}", id, e);
         }
         return bean;
     }
@@ -128,7 +128,7 @@ public class ProductDAO implements IProductDAO {
     public List<Product> list(int cid, int start, int count) {
         List<Product> beans = new ArrayList<>();
         Category category = new CategoryDAO().get(cid);
-        String sql = "SELECT * FROM Product WHERE cid = ?  ORDER BY id DESC LIMIT ?,? ";
+        String sql = "SELECT * FROM product WHERE cid = ?  ORDER BY id DESC LIMIT ?,? ";
         try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, cid);
             ps.setInt(2, start);

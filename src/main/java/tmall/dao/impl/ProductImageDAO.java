@@ -107,6 +107,7 @@ public class ProductImageDAO implements IProductImageDAO {
             ps.setInt(3, start);
             ps.setInt(4, count);
             ResultSet rs = ps.executeQuery();
+            int n = 0;
             while (rs.next()) {
                 ProductImage bean = new ProductImage();
                 int id = rs.getInt(1);
@@ -114,8 +115,8 @@ public class ProductImageDAO implements IProductImageDAO {
                 bean.setType(type);
                 bean.setId(id);
                 beans.add(bean);
+                logger.info("查询到产品 {} 的第 {} 张图片, 类型: {}", p.getName(), ++n, type);
             }
-            logger.info("查询产品 {} 的所有 {} 类型图片成功", p.getName(), type);
         } catch (SQLException e) {
             logger.error("查询产品 {} 的所有 {} 类型图片出错", p.getName(), type, e);
         }

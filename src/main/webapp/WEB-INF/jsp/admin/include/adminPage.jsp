@@ -21,7 +21,7 @@
     </li>
     
     <%-- 中间的循环页码 --%>
-    <c:forEach begin="0" end="${requestScope.page.totalPage - 1}" varStatus="status">
+    <c:forEach begin="0" end="${requestScope.page.totalPage <= 0 ? 0 :requestScope.page.totalPage - 1}" varStatus="status">
       <li><a href="?page.start=${status.index * requestScope.page.count}${requestScope.page.param}" class="current">${status.count}</a></li>
     </c:forEach>
     

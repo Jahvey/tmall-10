@@ -7,6 +7,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tmall.service.CategoryService;
+import tmall.service.ProductService;
+import tmall.service.PropertyService;
 import tmall.util.ImageUtil;
 import tmall.util.Page;
 
@@ -40,7 +42,9 @@ public abstract class BaseBackServlet extends HttpServlet {
     public abstract String update(HttpServletRequest request, HttpServletResponse response, Page page) ;
     public abstract String list(HttpServletRequest request, HttpServletResponse response, Page page) ;
 
-    protected CategoryService categoryService = new CategoryService();
+    protected final CategoryService categoryService = new CategoryService();
+    protected final ProductService productService = new ProductService();
+    protected final PropertyService propertyService = new PropertyService();
 
     /**
      * 利用反射根据传过来的method参数判断需要执行哪个方法
