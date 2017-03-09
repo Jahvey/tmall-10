@@ -7,12 +7,14 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tmall.service.CategoryService;
+import tmall.service.ProductImageService;
 import tmall.service.ProductService;
 import tmall.service.PropertyService;
 import tmall.util.ImageUtil;
 import tmall.util.Page;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +47,13 @@ public abstract class BaseBackServlet extends HttpServlet {
 
     protected final CategoryService categoryService = new CategoryService();
     protected final ProductService productService = new ProductService();
+    protected final ProductImageService productImageService = new ProductImageService();
     protected final PropertyService propertyService = new PropertyService();
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+    }
 
     /**
      * 利用反射根据传过来的method参数判断需要执行哪个方法
@@ -70,23 +79,30 @@ public abstract class BaseBackServlet extends HttpServlet {
         try {
             method = this.getClass().getMethod(methodStr, HttpServletRequest.class, HttpServletResponse.class,
                     Page.class);
-            String redirect = (String) method.invoke(this, req, resp, page);
+            final String[] redirect = new String[1];
+            try {
+                redirect[0] = (String) method.invoke(this, req, resp, page);
+            } catch (InvocationTargetException e) {
+                redirect[0] = "%服务器出错</br>" + Arrays.toString(e.getStackTrace());
+                Arrays.stream(e.getStackTrace()).forEach( (s) -> redirect[0] = redirect[0] + s + "</br>" );
+                logger.error("方法 {} 返回值为空", methodStr, e);
+            }
                 /* @: 客户端跳转
                  * %: 页面输出
                  * others: 服务器跳转
                  */
-            logger.info("跳转: " + redirect);
-            if(redirect.startsWith("@"))
-                resp.sendRedirect(redirect.substring(1));
-            else if(redirect.startsWith("%")) {
+            logger.info("跳转: " + redirect[0]);
+            if(redirect[0].startsWith("@"))
+                resp.sendRedirect(redirect[0].substring(1));
+            else if(redirect[0].startsWith("%")) {
                 resp.setContentType("text/html;charset=utf-8");
-                resp.getWriter().print(redirect.substring(1));
+                resp.getWriter().print(redirect[0].substring(1));
             }
             else
-                req.getRequestDispatcher(redirect).forward(req, resp);
+                req.getRequestDispatcher(redirect[0]).forward(req, resp);
         } catch (NoSuchMethodException e) {
             logger.error("没有指定的方法{}", methodStr, e);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             logger.error("方法 {} 反射出错", methodStr, e);
         }
     }

@@ -10,6 +10,14 @@ public class ProductImage {
     private Product product;
     private int id;
 
+    public ProductImage() {
+    }
+
+    public ProductImage(Product product, String type) {
+        this.product = product;
+        this.type = type;
+    }
+
     public int getId() {
         return id;
     }
