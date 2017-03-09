@@ -80,7 +80,7 @@
           <td>${p.stock}</td>
           <td><a href="admin_productImage_list?pid=${p.id}"><span
               class="glyphicon glyphicon-picture"></span></a></td>
-          <td><a href="admin_product_editPropertyValue?id=${p.id}"><span
+          <td><a href="admin_product_editPropertyValue?pid=${p.id}"><span
               class="glyphicon glyphicon-th-list"></span></a></td>
           
           <td><a href="admin_product_edit?id=${p.id}"><span

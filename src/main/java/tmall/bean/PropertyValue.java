@@ -11,6 +11,14 @@ public class PropertyValue {
     private Property property;
     private int id;
 
+    public PropertyValue() {
+    }
+
+    public PropertyValue(int id, String value) {
+        this.id = id;
+        this.value = value;
+    }
+
     public int getId() {
         return id;
     }

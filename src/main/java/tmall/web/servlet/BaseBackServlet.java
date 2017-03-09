@@ -6,10 +6,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tmall.service.CategoryService;
-import tmall.service.ProductImageService;
-import tmall.service.ProductService;
-import tmall.service.PropertyService;
+import tmall.service.*;
 import tmall.util.ImageUtil;
 import tmall.util.Page;
 
@@ -49,6 +46,10 @@ public abstract class BaseBackServlet extends HttpServlet {
     protected final ProductService productService = new ProductService();
     protected final ProductImageService productImageService = new ProductImageService();
     protected final PropertyService propertyService = new PropertyService();
+    protected final PropertyValueService propertyValueService = new PropertyValueService();
+    protected final UserService userService = new UserService();
+    protected final OrderService orderService = new OrderService();
+    protected final OrderItemService orderItemService = new OrderItemService();
 
     @Override
     public void init() throws ServletException {

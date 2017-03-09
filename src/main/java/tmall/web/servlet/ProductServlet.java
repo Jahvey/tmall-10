@@ -2,6 +2,7 @@ package tmall.web.servlet;
 
 import tmall.bean.Category;
 import tmall.bean.Product;
+import tmall.bean.PropertyValue;
 import tmall.util.Page;
 
 import javax.servlet.ServletException;
@@ -78,6 +79,24 @@ public class ProductServlet extends BaseBackServlet {
         request.setAttribute("ps", ps);
         request.setAttribute("page", page);
         return "/WEB-INF/jsp/admin/listProduct.jsp";
+    }
+
+    public String editPropertyValue(HttpServletRequest req, HttpServletResponse resp, Page page) {
+        int pid = Integer.parseInt(req.getParameter("pid"));
+        Product product = super.productService.get(pid);
+        List<PropertyValue> propertyValues = super.propertyValueService.list(pid);
+        req.setAttribute("p", product);
+        req.setAttribute("pvs", propertyValues);
+        return "/WEB-INF/jsp/admin/editPropertyValue.jsp";
+    }
+
+    public String updatePropertyValue(HttpServletRequest req, HttpServletResponse resp, Page page) {
+        int id = Integer.parseInt(req.getParameter("pvid"));
+        String value = req.getParameter("value");
+        PropertyValue propertyValue = super.propertyValueService.get(id);
+        propertyValue.setValue(value);
+        super.propertyValueService.update(propertyValue);
+        return "%success";
     }
 
     @Override

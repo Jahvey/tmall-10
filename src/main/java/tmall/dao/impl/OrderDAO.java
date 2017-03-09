@@ -156,6 +156,11 @@ public class OrderDAO implements IOrderDAO {
     }
 
     @Override
+    public List<Order> list() {
+        return this.list(0, Short.MAX_VALUE);
+    }
+
+    @Override
     public List<Order> list(int start, int count) {
         List<Order> beans = new ArrayList<>();
         String sql = "SELECT * FROM order_ ORDER BY id DESC LIMIT ?,?";

@@ -15,6 +15,9 @@ public interface IOrderDAO {
     void update(Order order);
     void delete(int id);
     Order get(int id);
+
+    List<Order> list();
+
     List<Order> list(int start, int count);
 
     /**
